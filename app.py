@@ -24,15 +24,22 @@ Migrate(app, db)
 
 # Models
 class Product(db.Model):
-    id = db.column(db.Integer, primary_key=True)
-    name = db.column(db.String(255))
-    description = db.column(db.String(255))
-    price = db.column(db.Float)
-    inventory_quantity = db.column(db.Integer)
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255))
+    description = db.Column(db.String(255))
+    price = db.Column(db.Float)
+    inventory_quantity = db.Column(db.Integer)
 
+    def __repr__(self):
+        return f'{self.year} {self.make} {self.model}'
 
 # Schemas
-
+class ProductSchema(ma.Schema):
+    class Meta:
+        fields = ("id", "name", "description", "price", "inventory_quantity")
+    
+product_schema = ProductSchema()
+products_schema = ProductSchema(many=True)
 
 
 # Resources
