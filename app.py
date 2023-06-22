@@ -43,16 +43,14 @@ class ProductSchema(ma.Schema):
     inventory_quantity = fields.Integer(required=True)
 
     class Meta:
-        fields = ["id", "name", "description", "price", "inventory_quantity"]
+        fields = ("id", "name", "description", "price", "inventory_quantity")
 
-        @post_load
-        def create_product(self, data, **kwargs):
-            return Product(**data)
+    @post_load
+    def create_product(self, data, **kwargs):
+        return Product(**data)
     
 product_schema = ProductSchema()
 products_schema = ProductSchema(many=True)
-
-
 
 # Resources
 class ProductListResource(Resource):
@@ -78,6 +76,7 @@ class ProductResource(Resource):
     def delete(self, product_id):
         product_from_db = Product.query.get_or_404(product_id)
         db.session.delete(product_from_db)
+        db.session.commit()
         return '', 204
 
     def put(self, product_id):
@@ -97,4 +96,4 @@ class ProductResource(Resource):
 
 # Routes
 api.add_resource(ProductListResource, '/api/products/')
-api.add_resource(ProductResource, '/api/products/<int:product_id>')
+api.add_resource(ProductResource, '/api/products/<int:product_id>/')
